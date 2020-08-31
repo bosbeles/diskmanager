@@ -52,7 +52,7 @@ public class App {
         recordSizeManager.start();
         TimeUnit.SECONDS.sleep(15);
         // When one of the checks detects overflow in size, record size manager will be stopped.
-        // In that case you will be stopped the record.
+        // In that case you should be stopping the record.
         // Put a listener to record size manager and then stop the record.
         System.out.println("Test Finished.");
 
