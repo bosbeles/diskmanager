@@ -10,9 +10,10 @@ import static org.example.monitor.MonitorManager.FileUnit.MB;
 
 public class App {
     public static void main(String[] args) throws InterruptedException {
-
+        final String recordPath = "D:\\Drivers\\Bluetooth";
         MonitorManager manager = new MonitorManager();
-        Monitor monitor = manager.createMonitor("D:\\Drivers\\Bluetooth", MB.toByte(10));
+
+        Monitor monitor = manager.createMonitor(recordPath, MB.toByte(10));
         monitor.addListener(System.out::println);
 
         // Schedule periodic folder size check.
@@ -24,7 +25,7 @@ public class App {
         // However it can be queried for isFull.
         monitor.stop();
 
-        Monitor diskMonitor = manager.createMonitor("D:\\Drivers\\Bluetooth", GB.toByte(2));
+        Monitor diskMonitor = manager.createMonitor(recordPath, GB.toByte(2));
         diskMonitor.addListener(System.out::println);
         // Start monitor for disk size instead of folder size.
         // Disk size is faster
@@ -41,7 +42,7 @@ public class App {
         manager.close();
 
         System.out.println("Testing record size manager.");
-        RecordSizeManager recordSizeManager = new RecordSizeManager("D:\\Drivers\\Bluetooth", GB.toByte(2), MB.toByte(10));
+        RecordSizeManager recordSizeManager = new RecordSizeManager(recordPath, GB.toByte(2), MB.toByte(10));
 
         // After starting a record, check for the sizes.
         if (recordSizeManager.isRecordPathFull() || recordSizeManager.isDiskFull()) {

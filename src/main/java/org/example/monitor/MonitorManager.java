@@ -19,7 +19,7 @@ public class MonitorManager {
      * Creates a folder size monitoring manager.
      */
     public MonitorManager() {
-        this(path -> new RecursiveDiskSizeProvider(path));
+        this(RecursiveDiskSizeProvider::new);
     }
 
     /**
@@ -45,8 +45,7 @@ public class MonitorManager {
      */
     public Monitor createMonitor(String path, long maxSize) {
         DiskSizeProvider sizeProvider = diskSizeProviderFactory.apply(path);
-        Monitor monitor = new Monitor(sizeProvider, maxSize);
-        return monitor;
+        return new Monitor(sizeProvider, maxSize);
     }
 
     /**
