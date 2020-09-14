@@ -1,6 +1,6 @@
 package record.view.table;
 
-import record.util.Bytes;
+import record.util.FileSize;
 import record.view.table.renderer.ByteRenderer;
 import record.view.table.renderer.DurationRenderer;
 
@@ -14,7 +14,7 @@ public class RecordTable extends JTable {
     public RecordTable() {
         setRowHeight(24);
         setAutoCreateRowSorter(true);
-        setDefaultRenderer(Bytes.class, new ByteRenderer());
+        setDefaultRenderer(FileSize.class, new ByteRenderer());
         setDefaultRenderer(Duration.class, new DurationRenderer());
 
     }

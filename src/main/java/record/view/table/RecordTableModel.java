@@ -1,8 +1,8 @@
 package record.view.table;
 
-import record.util.Bytes;
 import record.repo.RecordMetadata;
 import record.repo.RecordRepo;
+import record.util.FileSize;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.Duration;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class RecordTableModel extends AbstractTableModel {
-    private final RecordRepo recordRepo;
+    private final transient RecordRepo recordRepo;
 
     protected String[] columnNames = new String[]{
             "Name", "Creation Time", "Duration", "Size"
@@ -18,7 +18,7 @@ public class RecordTableModel extends AbstractTableModel {
 
     protected Class[] columnClasses = new Class[]{
             String.class, LocalDateTime.class, Duration.class,
-            Bytes.class
+            FileSize.class
     };
 
     // This table model works for any one given directory
@@ -27,24 +27,29 @@ public class RecordTableModel extends AbstractTableModel {
     }
 
     // These are easy methods.
+    @Override
     public int getColumnCount() {
         return columnNames.length;
     }  // A constant for this model
 
+    @Override
     public int getRowCount() {
         return recordRepo.size();
     }  // # of files in dir
 
     // Information about each column.
+    @Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
+    @Override
     public Class getColumnClass(int col) {
         return columnClasses[col];
     }
 
     // The method that must actually return the value of each cell.
+    @Override
     public Object getValueAt(int row, int col) {
         RecordMetadata metadata = recordRepo.get(row);
         if (metadata == null) {

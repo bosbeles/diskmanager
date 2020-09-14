@@ -1,9 +1,10 @@
 package record.view.action;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import record.repo.RecordMetadata;
 import record.repo.RecordOrder;
-import record.util.Bytes;
+import record.util.FileSize;
 import record.view.RecordTestPanel;
 import record.view.table.RecordTableModel;
 
@@ -23,12 +24,13 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
+@Log4j2
 public class RecordAction extends AbstractAction {
 
 
-    public static final byte[] FIXED_BYTES = new byte[4096];
+    private static final byte[] FIXED_BYTES = new byte[4096];
     private final RecordTestPanel frame;
 
     public RecordAction(RecordTestPanel frame) {
@@ -52,7 +54,7 @@ public class RecordAction extends AbstractAction {
         SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
             @Override
             protected Void doInBackground() throws Exception {
-                Consumer<Integer> progressUpdater = progress -> setProgress(progress);
+                IntConsumer progressUpdater = this::setProgress;
                 for (int i = 0; i < recordOrderList.length; i++) {
                     RecordOrder recordOrder = recordOrderList[i];
                     final RecordMetadata metadata = new RecordMetadata();
@@ -112,7 +114,7 @@ public class RecordAction extends AbstractAction {
         });
     }
 
-    private RecordMetadata processRecordOrder(RecordOrder recordOrder, Consumer<Integer> progressUpdater) throws IOException {
+    private RecordMetadata processRecordOrder(RecordOrder recordOrder, IntConsumer progressUpdater) throws IOException {
         final long bytes = recordOrder.getBytes();
         final String recordName = recordOrder.getName();
 
@@ -136,7 +138,7 @@ public class RecordAction extends AbstractAction {
 
 
         } catch (IOException e) {
-            System.err.format("IOException: %s%n", e);
+            log.debug("Record {} could not be written.", currentRecordFolder.getName(), e);
             throw e;
         }
 
@@ -166,7 +168,7 @@ public class RecordAction extends AbstractAction {
         } catch (IOException io) {
             io.printStackTrace();
         }
-        metadata.setSize(new Bytes(FileUtils.sizeOfDirectory(currentRecordFolder)));
+        metadata.setSize(new FileSize(FileUtils.sizeOfDirectory(currentRecordFolder)));
 
         return metadata;
     }

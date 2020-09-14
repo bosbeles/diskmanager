@@ -1,9 +1,9 @@
 package record.view.action;
 
 import org.apache.commons.lang3.StringUtils;
+import record.view.RecordView;
 import record.view.table.RecordTable;
 import record.view.table.RecordTableModel;
-import record.view.RecordView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -88,9 +88,8 @@ public class RenameAction extends AbstractAction {
         }
 
         recordTable.getSelectionModel().clearSelection();
-        selectedRows.stream().map(modelIndex -> recordTable.convertRowIndexToView(modelIndex)).forEach(viewIndex -> {
-            recordTable.getSelectionModel().addSelectionInterval(viewIndex, viewIndex);
-        });
+        selectedRows.stream().map(recordTable::convertRowIndexToView)
+                .forEach(viewIndex -> recordTable.getSelectionModel().addSelectionInterval(viewIndex, viewIndex));
 
 
     }

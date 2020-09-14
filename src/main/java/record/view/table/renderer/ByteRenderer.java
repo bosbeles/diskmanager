@@ -1,7 +1,7 @@
 package record.view.table.renderer;
 
 import record.util.FileUnit;
-import record.util.Bytes;
+import record.util.FileSize;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -22,8 +22,8 @@ public class ByteRenderer extends DefaultTableCellRenderer {
     @Override
     protected void setValue(Object value) {
         Object result = value;
-        if (value instanceof Bytes) {
-            result = FileUnit.humanReadable(((Bytes) value).getBytes());
+        if (value instanceof FileSize) {
+            result = FileUnit.humanReadable(((FileSize) value).getSize());
 
         }
 

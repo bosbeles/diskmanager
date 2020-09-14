@@ -10,6 +10,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class GuiTester {
+
+    private GuiTester() {
+        // Hidden constructor.
+    }
+
     public static void test(JPanel panel) {
         test(frame -> panel, null);
     }
@@ -122,7 +127,6 @@ public class GuiTester {
                 substance.add(item);
             } else {
                 menu.add(item);
-                ;
             }
 
         }
@@ -134,7 +138,7 @@ public class GuiTester {
         frame.setJMenuBar(menuBar);
         frame.getContentPane().add(panelSupplier.apply(frame));
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
         frame.pack();
@@ -166,7 +170,7 @@ public class GuiTester {
             UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
             for (UIManager.LookAndFeelInfo lookAndFeelInfo : lookAndFeelInfos) {
                 if (lookAndFeelInfo.getName().contains(lookAndFeel)) {
-                    UIManager.setLookAndFeel(lookAndFeelInfo.getClassName().toString());
+                    UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
                     updateLaf();
                 }
             }
@@ -183,8 +187,7 @@ public class GuiTester {
         for (Window w : Window.getWindows()) {
             SwingUtilities.updateComponentTreeUI(w);
             if (w.isDisplayable() && (w
-                    instanceof Frame ? !((Frame) w).isResizable() : w instanceof Dialog ?
-                    !((Dialog) w).isResizable() : true)) w.pack();
+                    instanceof Frame ? !((Frame) w).isResizable() : !(w instanceof Dialog) || !((Dialog) w).isResizable())) w.pack();
         }
     }
 }

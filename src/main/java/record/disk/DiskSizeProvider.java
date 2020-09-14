@@ -1,4 +1,4 @@
-package org.example.monitor;
+package record.disk;
 
 public interface DiskSizeProvider {
 

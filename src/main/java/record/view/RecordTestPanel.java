@@ -1,12 +1,12 @@
 package record.view;
 
 import lombok.Getter;
-import org.example.monitor.DiskSizeProviderImpl;
-import record.util.FileUnit;
+import record.disk.DiskSizeProviderImpl;
 import record.repo.DiskStats;
 import record.repo.RecordOrder;
 import record.repo.RecordRepo;
 import record.test.GuiTester;
+import record.util.FileUnit;
 import record.view.action.RecordAction;
 import record.view.progress.DiskSpaceProgressBar;
 
@@ -25,7 +25,6 @@ import static record.util.GBC.gbcHorizontal;
 
 public class RecordTestPanel extends JPanel {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
     @Getter
     private JButton recordButton;
@@ -42,10 +41,12 @@ public class RecordTestPanel extends JPanel {
 
     private JTextField timesField;
 
+
     private DiskSpaceProgressBar diskUsage;
-    private final DiskSizeProviderImpl sizeProvider;
-    private final DiskStats.DiskParameters parameters;
-    private final ScheduledExecutorService scheduler;
+    private final transient DiskSizeProviderImpl sizeProvider;
+    private final transient DiskStats.DiskParameters parameters;
+    private final transient ScheduledExecutorService scheduler;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
 
     public RecordTestPanel() {
@@ -109,11 +110,10 @@ public class RecordTestPanel extends JPanel {
         statusBar.add(diskUsage, diskUsageGbc);
 
         recordView = new RecordView(new RecordRepo("D:\\Records"));
-        scheduler.scheduleWithFixedDelay(() -> {
-            EventQueue.invokeLater(() -> {
-                recordView.getRecordTable().refresh();
-            });
-        }, 10, 10, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(() ->
+                        EventQueue.invokeLater(() ->
+                                recordView.getRecordTable().refresh()),
+                10, 10, TimeUnit.SECONDS);
 
 
         add(recordView);
@@ -129,7 +129,7 @@ public class RecordTestPanel extends JPanel {
         double d = Double.parseDouble(recordField.getText());
         FileUnit unit = unitComboBox.getItemAt(unitComboBox.getSelectedIndex());
         long bytes = unit.toByte(d);
-        String name = DATE_FORMAT.format(new Date());
+        String name = dateFormat.format(new Date());
 
         for (int i = 0; i < times; i++) {
             RecordOrder.RecordOrderBuilder recordOrderBuilder = RecordOrder.builder().bytes(bytes);
@@ -155,9 +155,7 @@ public class RecordTestPanel extends JPanel {
     public synchronized void updateDiskStatus() {
         long usedSize = sizeProvider.getUsedSize();
         final DiskStats stats = new DiskStats(usedSize, parameters);
-        EventQueue.invokeLater(() -> {
-            onDiskStats(stats);
-        });
+        EventQueue.invokeLater(() -> onDiskStats(stats));
     }
 
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
 package record.repo;
 
 import org.apache.commons.io.FileUtils;
-import record.util.Bytes;
+import record.util.FileSize;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,7 +86,8 @@ public class RecordRepo {
         }
         File[] possibleRecords = recordFolder.listFiles(File::isDirectory);
         Arrays.sort(possibleRecords);
-        Set<String> possibleRecordNames = Arrays.stream(possibleRecords).map(rec -> rec.getName()).collect(Collectors.toSet());
+        Set<String> possibleRecordNames = Arrays.stream(possibleRecords)
+                .map(File::getName).collect(Collectors.toSet());
         for (File possibleRecord : possibleRecords) {
             RecordMetadata metadata = records.get(possibleRecord.getName());
             if (metadata == null) {
@@ -103,7 +104,7 @@ public class RecordRepo {
     private RecordMetadata readMetadata(File possibleRecord) {
         RecordMetadata metadata = new RecordMetadata();
         metadata.setName(possibleRecord.getName());
-        metadata.setSize(new Bytes(FileUtils.sizeOfDirectory(possibleRecord)));
+        metadata.setSize(new FileSize(FileUtils.sizeOfDirectory(possibleRecord)));
 
         try (InputStream input = new FileInputStream(new File(possibleRecord, "stats.properties"))) {
 

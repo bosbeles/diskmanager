@@ -8,13 +8,13 @@ import lombok.NonNull;
 @Getter
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class Bytes implements Comparable<Bytes> {
+public final class FileSize implements Comparable<FileSize> {
 
     @NonNull
-    private final long bytes;
+    private final long size;
 
     @Override
-    public int compareTo(Bytes o) {
-        return Long.compare(bytes, o.bytes);
+    public int compareTo(FileSize fs) {
+        return Long.compare(size, fs.size);
     }
 }

@@ -18,12 +18,9 @@ import static record.util.GBC.gbcHorizontal;
 public class RecordView extends JPanel {
 
     @Getter
-    private final RecordRepo recordRepo;
+    private final transient RecordRepo recordRepo;
     @Getter
     private RecordTable recordTable;
-    private JButton refreshButton;
-    private JButton renameButton;
-    private JButton deleteButton;
 
 
     public RecordView(RecordRepo recordRepo) {
@@ -40,12 +37,12 @@ public class RecordView extends JPanel {
         JScrollPane scrollPane = new JScrollPane(recordTable);
         recordTable.setFillsViewportHeight(true);
 
-        refreshButton = new JButton(new RefreshAction(this));
+        JButton refreshButton = new JButton(new RefreshAction(this));
         Dimension size = refreshButton.getPreferredSize();
         size.width = 100;
         refreshButton.setPreferredSize(size);
-        renameButton = new JButton(new RenameAction(this));
-        deleteButton = new JButton(new DeleteAction(this));
+        JButton renameButton = new JButton(new RenameAction(this));
+        JButton deleteButton = new JButton(new DeleteAction(this));
 
 
         GridBagConstraints recordTableGbc = gbc(0, 0);

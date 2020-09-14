@@ -14,7 +14,7 @@ public enum FileUnit {
 
     private long multiplier;
 
-    private FileUnit(long multiplier) {
+    FileUnit(long multiplier) {
         this.multiplier = multiplier;
     }
 

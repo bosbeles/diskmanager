@@ -4,6 +4,9 @@ import java.awt.*;
 
 public class GBC {
 
+    private GBC() {
+        // Hide constructor.
+    }
 
     public static GridBagConstraints gbc(int x, int y) {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -31,6 +34,9 @@ public class GBC {
                 break;
             case GridBagConstraints.VERTICAL:
                 gbc.weighty = weight;
+                break;
+            default:
+                break;
         }
 
         return gbc;

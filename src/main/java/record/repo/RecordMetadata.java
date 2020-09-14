@@ -4,7 +4,7 @@ package record.repo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import record.util.Bytes;
+import record.util.FileSize;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ public class RecordMetadata implements Comparable<RecordMetadata> {
     private String name;
     private LocalDateTime creationTime;
     private Duration duration;
-    private Bytes size;
+    private FileSize size;
     private boolean locked = false;
 
     public RecordMetadata(RecordMetadata metadata) {

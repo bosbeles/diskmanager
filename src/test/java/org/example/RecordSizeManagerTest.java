@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.monitor.DiskSizeProvider;
+import record.disk.DiskSizeProvider;
 import org.example.monitor.MonitorManager;
 import org.junit.Test;
 
