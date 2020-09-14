@@ -1,6 +1,6 @@
 package record.view.table;
 
-import record.repo.Bytes;
+import record.util.Bytes;
 import record.view.table.renderer.ByteRenderer;
 import record.view.table.renderer.DurationRenderer;
 

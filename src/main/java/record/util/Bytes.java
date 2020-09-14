@@ -1,17 +1,17 @@
-package record.repo;
+package record.util;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 
+@Getter
 @EqualsAndHashCode
-public class Bytes implements Comparable<Bytes> {
+@AllArgsConstructor
+public final class Bytes implements Comparable<Bytes> {
 
-    @Getter
+    @NonNull
     private final long bytes;
-
-    public Bytes(long bytes) {
-        this.bytes = bytes;
-    }
 
     @Override
     public int compareTo(Bytes o) {

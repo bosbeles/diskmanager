@@ -1,6 +1,7 @@
 package record.repo;
 
 import org.apache.commons.io.FileUtils;
+import record.util.Bytes;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class RecordRepo {
 
-    private Map<String, RecordMetaData> records;
+    private Map<String, RecordMetadata> records;
     private final File recordFolder;
 
     public RecordRepo(String path) {
@@ -29,7 +30,7 @@ public class RecordRepo {
         return records.size();
     }
 
-    public RecordMetaData get(int index) {
+    public RecordMetadata get(int index) {
         Optional<String> first = records.keySet().stream().sorted().skip(index).findFirst();
         if (first.isPresent()) {
             return records.get(first.get());
@@ -37,19 +38,19 @@ public class RecordRepo {
         return null;
     }
 
-    public RecordMetaData get(String metaData) {
-        return records.get(metaData);
+    public RecordMetadata get(String metadata) {
+        return records.get(metadata);
     }
 
-    public void add(RecordMetaData recordMetaData) {
-        update(recordMetaData.getName(), recordMetaData);
+    public void add(RecordMetadata recordMetadata) {
+        update(recordMetadata.getName(), recordMetadata);
     }
 
     public boolean remove(String name) {
 
         try {
             FileUtils.deleteDirectory(new File(recordFolder, name));
-            RecordMetaData removed = records.remove(name);
+            RecordMetadata removed = records.remove(name);
             return removed != null;
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,17 +58,17 @@ public class RecordRepo {
         return false;
     }
 
-    public boolean update(String name, RecordMetaData recordMetaData) {
+    public boolean update(String name, RecordMetadata recordMetadata) {
         boolean result = true;
-        if (!name.equals(recordMetaData.getName())) {
+        if (!name.equals(recordMetadata.getName())) {
             File recordFile = new File(recordFolder, name);
-            result = recordFile.renameTo(new File(recordFolder, recordMetaData.getName()));
+            result = recordFile.renameTo(new File(recordFolder, recordMetadata.getName()));
             if (result) {
                 records.remove(name);
             }
         }
         if (result) {
-            records.put(recordMetaData.getName(), recordMetaData);
+            records.put(recordMetadata.getName(), recordMetadata);
         }
 
         return result;
@@ -87,10 +88,10 @@ public class RecordRepo {
         Arrays.sort(possibleRecords);
         Set<String> possibleRecordNames = Arrays.stream(possibleRecords).map(rec -> rec.getName()).collect(Collectors.toSet());
         for (File possibleRecord : possibleRecords) {
-            RecordMetaData metaData = records.get(possibleRecord.getName());
-            if (metaData == null) {
-                metaData = readMetaData(possibleRecord);
-                records.put(metaData.getName(), metaData);
+            RecordMetadata metadata = records.get(possibleRecord.getName());
+            if (metadata == null) {
+                metadata = readMetadata(possibleRecord);
+                records.put(metadata.getName(), metadata);
                 changed = true;
             }
         }
@@ -99,10 +100,10 @@ public class RecordRepo {
         return changed || removed;
     }
 
-    private RecordMetaData readMetaData(File possibleRecord) {
-        RecordMetaData metaData = new RecordMetaData();
-        metaData.setName(possibleRecord.getName());
-        metaData.setSize(new Bytes(FileUtils.sizeOfDirectory(possibleRecord)));
+    private RecordMetadata readMetadata(File possibleRecord) {
+        RecordMetadata metadata = new RecordMetadata();
+        metadata.setName(possibleRecord.getName());
+        metadata.setSize(new Bytes(FileUtils.sizeOfDirectory(possibleRecord)));
 
         try (InputStream input = new FileInputStream(new File(possibleRecord, "stats.properties"))) {
 
@@ -113,16 +114,16 @@ public class RecordRepo {
             String creationTime = prop.getProperty("creationTime");
 
             long ct = Long.parseLong(creationTime);
-            metaData.setCreationTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(ct), ZoneId.systemDefault()));
+            metadata.setCreationTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(ct), ZoneId.systemDefault()));
 
             String duration = prop.getProperty("duration");
             long d = Long.parseLong(duration);
-            metaData.setDuration(Duration.ofMillis(d));
+            metadata.setDuration(Duration.ofMillis(d));
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return metaData;
+        return metadata;
     }
 }

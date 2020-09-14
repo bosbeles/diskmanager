@@ -1,7 +1,7 @@
 package record.view.table;
 
-import record.repo.Bytes;
-import record.repo.RecordMetaData;
+import record.util.Bytes;
+import record.repo.RecordMetadata;
 import record.repo.RecordRepo;
 
 import javax.swing.table.AbstractTableModel;
@@ -46,19 +46,19 @@ public class RecordTableModel extends AbstractTableModel {
 
     // The method that must actually return the value of each cell.
     public Object getValueAt(int row, int col) {
-        RecordMetaData metaData = recordRepo.get(row);
-        if (metaData == null) {
+        RecordMetadata metadata = recordRepo.get(row);
+        if (metadata == null) {
             return null;
         }
         switch (col) {
             case 0:
-                return metaData.getName();
+                return metadata.getName();
             case 1:
-                return metaData.getCreationTime();
+                return metadata.getCreationTime();
             case 2:
-                return metaData.getDuration();
+                return metadata.getDuration();
             case 3:
-                return metaData.getSize();
+                return metadata.getSize();
             default:
                 return null;
         }
@@ -83,18 +83,18 @@ public class RecordTableModel extends AbstractTableModel {
         fireTableRowsDeleted(rowList[0], rowList[rowList.length - 1]);
     }
 
-    public void addOrUpdate(RecordMetaData metaData) {
-        recordRepo.add(metaData);
+    public void addOrUpdate(RecordMetadata metadata) {
+        recordRepo.add(metadata);
         fireTableDataChanged();
     }
 
 
     public boolean rename(String oldName, String newName) {
-        RecordMetaData metaData = recordRepo.get(oldName);
-        if (metaData != null) {
-            RecordMetaData newMetaData = new RecordMetaData(metaData);
-            newMetaData.setName(newName);
-            return recordRepo.update(oldName, newMetaData);
+        RecordMetadata metadata = recordRepo.get(oldName);
+        if (metadata != null) {
+            RecordMetadata newMetadata = new RecordMetadata(metadata);
+            newMetadata.setName(newName);
+            return recordRepo.update(oldName, newMetadata);
         }
         return false;
     }

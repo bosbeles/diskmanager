@@ -4,6 +4,7 @@ package record.repo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import record.util.Bytes;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecordMetaData implements Comparable<RecordMetaData> {
+public class RecordMetadata implements Comparable<RecordMetadata> {
 
     private String name;
     private LocalDateTime creationTime;
@@ -19,16 +20,16 @@ public class RecordMetaData implements Comparable<RecordMetaData> {
     private Bytes size;
     private boolean locked = false;
 
-    public RecordMetaData(RecordMetaData metaData) {
-        this.name = metaData.name;
-        this.creationTime = metaData.creationTime;
-        this.duration = metaData.duration;
-        this.size = metaData.size;
-        this.locked = metaData.locked;
+    public RecordMetadata(RecordMetadata metadata) {
+        this.name = metadata.name;
+        this.creationTime = metadata.creationTime;
+        this.duration = metadata.duration;
+        this.size = metadata.size;
+        this.locked = metadata.locked;
     }
 
     @Override
-    public int compareTo(RecordMetaData o) {
+    public int compareTo(RecordMetadata o) {
         return name.compareTo(o.name);
     }
 }

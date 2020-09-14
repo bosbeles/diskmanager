@@ -1,7 +1,7 @@
 package record.view.table.renderer;
 
 import record.util.FileUnit;
-import record.repo.Bytes;
+import record.util.Bytes;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

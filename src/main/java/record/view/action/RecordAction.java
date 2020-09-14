@@ -1,10 +1,10 @@
 package record.view.action;
 
 import org.apache.commons.io.FileUtils;
-import record.view.RecordTestPanel;
+import record.repo.RecordMetadata;
 import record.repo.RecordOrder;
-import record.repo.Bytes;
-import record.repo.RecordMetaData;
+import record.util.Bytes;
+import record.view.RecordTestPanel;
 import record.view.table.RecordTableModel;
 
 import javax.swing.*;
@@ -55,13 +55,13 @@ public class RecordAction extends AbstractAction {
                 Consumer<Integer> progressUpdater = progress -> setProgress(progress);
                 for (int i = 0; i < recordOrderList.length; i++) {
                     RecordOrder recordOrder = recordOrderList[i];
-                    final RecordMetaData metaData = new RecordMetaData();
-                    metaData.setName(recordOrder.getName());
-                    metaData.setLocked(true);
-                    updateMetaDataInGui(metaData);
-                    RecordMetaData resultMetaData = processRecordOrder(recordOrder, progressUpdater);
+                    final RecordMetadata metadata = new RecordMetadata();
+                    metadata.setName(recordOrder.getName());
+                    metadata.setLocked(true);
+                    updateMetadataInGui(metadata);
+                    RecordMetadata resultMetadata = processRecordOrder(recordOrder, progressUpdater);
 
-                    updateMetaDataInGui(resultMetaData);
+                    updateMetadataInGui(resultMetadata);
 
                     publish(i + 1);
                 }
@@ -105,14 +105,14 @@ public class RecordAction extends AbstractAction {
 
     }
 
-    private void updateMetaDataInGui(final RecordMetaData metaData) {
+    private void updateMetadataInGui(final RecordMetadata metadata) {
         EventQueue.invokeLater(() -> {
             RecordTableModel model = (RecordTableModel) frame.getRecordView().getRecordTable().getModel();
-            model.addOrUpdate(metaData);
+            model.addOrUpdate(metadata);
         });
     }
 
-    private RecordMetaData processRecordOrder(RecordOrder recordOrder, Consumer<Integer> progressUpdater) throws IOException {
+    private RecordMetadata processRecordOrder(RecordOrder recordOrder, Consumer<Integer> progressUpdater) throws IOException {
         final long bytes = recordOrder.getBytes();
         final String recordName = recordOrder.getName();
 
@@ -140,9 +140,9 @@ public class RecordAction extends AbstractAction {
             throw e;
         }
 
-        RecordMetaData metaData = new RecordMetaData();
-        metaData.setName(recordName);
-        metaData.setLocked(false);
+        RecordMetadata metadata = new RecordMetadata();
+        metadata.setName(recordName);
+        metadata.setLocked(false);
 
         try (OutputStream output = new FileOutputStream(new File(currentRecordFolder, "stats.properties"))) {
 
@@ -152,8 +152,8 @@ public class RecordAction extends AbstractAction {
 
             Instant now = Instant.now();
             Duration duration = Duration.ofMillis(bytes / 100);
-            metaData.setCreationTime(LocalDateTime.ofInstant(now, ZoneId.systemDefault()));
-            metaData.setDuration(duration);
+            metadata.setCreationTime(LocalDateTime.ofInstant(now, ZoneId.systemDefault()));
+            metadata.setDuration(duration);
 
 
             prop.setProperty("creationTime", Long.toString(now.toEpochMilli()));
@@ -166,8 +166,8 @@ public class RecordAction extends AbstractAction {
         } catch (IOException io) {
             io.printStackTrace();
         }
-        metaData.setSize(new Bytes(FileUtils.sizeOfDirectory(currentRecordFolder)));
+        metadata.setSize(new Bytes(FileUtils.sizeOfDirectory(currentRecordFolder)));
 
-        return metaData;
+        return metadata;
     }
 }
