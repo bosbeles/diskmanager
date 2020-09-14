@@ -5,8 +5,8 @@ import org.example.monitor.MonitorManager.Monitor;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.example.monitor.MonitorManager.FileUnit.GB;
-import static org.example.monitor.MonitorManager.FileUnit.MB;
+import static record.util.FileUnit.GB;
+import static record.util.FileUnit.MB;
 
 public class App {
     public static void main(String[] args) throws InterruptedException {
@@ -45,7 +45,7 @@ public class App {
         RecordSizeManager recordSizeManager = new RecordSizeManager(recordPath, GB.toByte(2), MB.toByte(10));
 
         // After starting a record, check for the sizes.
-        if (recordSizeManager.isRecordPathFull() || recordSizeManager.isDiskFull()) {
+        if (recordSizeManager.isDiskFull()) {
             // Do not start a record.
         }
 
@@ -59,6 +59,7 @@ public class App {
 
         // Destroy will destroy the periodic change thread.
         recordSizeManager.destroy();
+
 
     }
 }

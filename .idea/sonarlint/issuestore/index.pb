@@ -15,11 +15,12 @@ g
 7src/main/java/org/example/monitor/DiskSizeProvider.java,c\c\cc0f7dcb1cf387f7aaf0bcf07346f3a59b51f3bd
 g
 7src/main/java/org/example/monitor/FileSizeListener.java,4\1\41d8d1f31a4e5e884b042abb4087d142e387970e
-p
-@src/main/java/org/example/monitor/RecursiveDiskSizeProvider.java,6\2\6284a95318e6bc6773ad07e6b3d56fdec205dc1f
 R
 "src/main/java/org/example/App.java,2\6\268b09d2a5cdab7d148f0ec91f7b3fb51601410d
 `
 0src/main/java/org/example/RecordSizeManager.java,5\4\5430e9352fea445822279dc18de097d1d312e522
 d
 4src/test/java/org/example/RecordSizeManagerTest.java,d\3\d3c9149def2fee675aacedfe9b4426fd56f2b03e
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302

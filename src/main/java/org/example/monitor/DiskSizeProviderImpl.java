@@ -1,8 +1,5 @@
 package org.example.monitor;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
@@ -11,17 +8,15 @@ import java.nio.file.Paths;
 
 
 /**
- * A recursive directory traversal implementation of <code>DiskSizeProvider</code>
+ * <code>DiskSizeProvider</code> implementation.
  */
-public class RecursiveDiskSizeProvider implements DiskSizeProvider {
-    private final File file;
+public class DiskSizeProviderImpl implements DiskSizeProvider {
     private final FileStore fileStore;
 
 
-    public RecursiveDiskSizeProvider(String folder) {
+    public DiskSizeProviderImpl(String folder) {
         FileStore tempFileStore;
         Path path = Paths.get(folder);
-        file = path.toFile();
 
         try {
             tempFileStore = Files.getFileStore(path);
@@ -36,27 +31,12 @@ public class RecursiveDiskSizeProvider implements DiskSizeProvider {
 
 
     /**
-     * Counts the size of a directory recursively (sum of the length of all files).
-     *
-     * @return size of directory in bytes
-     */
-    @Override
-    public long getSizeOfFolder() {
-        long time = System.currentTimeMillis();
-        long size = FileUtils.sizeOfDirectory(file);
-        time = System.currentTimeMillis() - time;
-        //TODO Log
-        System.out.println("Elapsed time: " + time + " ms.");
-        return size;
-    }
-
-    /**
      * Returns the size of disk.
      *
      * @return
      */
     @Override
-    public long getSizeofDisk() {
+    public long getUsedSize() {
         if (fileStore != null) {
             try {
                 return fileStore.getTotalSpace() - fileStore.getUsableSpace();
@@ -65,6 +45,18 @@ public class RecursiveDiskSizeProvider implements DiskSizeProvider {
             }
         }
 
+        return -1;
+    }
+
+    @Override
+    public long getTotalSize() {
+        if (fileStore != null) {
+            try {
+                return fileStore.getTotalSpace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return -1;
     }
 }

@@ -2,8 +2,9 @@ package org.example.monitor;
 
 import org.example.event.DiskFullEvent;
 import org.example.event.FileSizeEvent;
-import org.example.event.FolderFullEvent;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,7 +20,7 @@ public class MonitorManager {
      * Creates a folder size monitoring manager.
      */
     public MonitorManager() {
-        this(RecursiveDiskSizeProvider::new);
+        this(DiskSizeProviderImpl::new);
     }
 
     /**
@@ -66,35 +67,7 @@ public class MonitorManager {
         scheduler.shutdownNow();
     }
 
-    /**
-     * Enumeration for File units.
-     */
-    public enum FileUnit {
-        GB(1024 * 1024 * 1024),
-        MB(1024 * 1024),
-        KB(1024),
-        B(1);
 
-        private long multiplier;
-
-        private FileUnit(long multiplier) {
-            this.multiplier = multiplier;
-        }
-
-        public long getMultiplier() {
-            return multiplier;
-        }
-
-        /**
-         * Converts to length in bytes.
-         *
-         * @param n the number
-         * @return the length in bytes.
-         */
-        public long toByte(long n) {
-            return n * multiplier;
-        }
-    }
 
 
     /**
@@ -135,13 +108,13 @@ public class MonitorManager {
         public void start(boolean disk, long pollTime, TimeUnit timeUnit) {
             if (!alreadyStarted) {
                 scheduledFuture = scheduler.scheduleWithFixedDelay(() -> {
-                    long sizeOfDisk = disk ? sizeProvider.getSizeofDisk() : sizeProvider.getSizeOfFolder();
+                    long sizeOfDisk = sizeProvider.getUsedSize();
 
                     boolean diskFullFlag = sizeOfDisk >= maxSize;
 
                     boolean generateDiskFullEvent = diskFullFlag && diskFull.compareAndSet(!diskFullFlag, diskFullFlag);
                     if (generateDiskFullEvent) {
-                        FileSizeEvent event = disk ? new DiskFullEvent(maxSize, sizeOfDisk) : new FolderFullEvent(maxSize, sizeOfDisk);
+                        FileSizeEvent event = new DiskFullEvent(maxSize, sizeOfDisk);
                         listenerList.forEach(listener -> listener.onDiskEvent(event));
                     }
                 }, 0, pollTime, timeUnit);
@@ -152,11 +125,7 @@ public class MonitorManager {
 
 
         public boolean isFull() {
-            return isFull(false);
-        }
-
-        public boolean isFull(boolean disk) {
-            long used = disk ? sizeProvider.getSizeofDisk() : sizeProvider.getSizeOfFolder();
+            long used = sizeProvider.getUsedSize();
             return used >= maxSize;
         }
 

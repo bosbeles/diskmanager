@@ -90,12 +90,9 @@ public class RecordSizeManager {
         }
     }
 
-    public boolean isRecordPathFull() {
-        return recordPathMonitor.isFull();
-    }
 
     public boolean isDiskFull() {
-        return diskSizeMonitor.isFull(true);
+        return diskSizeMonitor.isFull();
     }
 
 

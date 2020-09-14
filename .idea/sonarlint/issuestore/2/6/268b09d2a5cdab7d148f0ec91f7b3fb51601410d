@@ -1,3 +1,11 @@
 
-Z	java:S106"9Replace this use of System.out or System.err by a logger.(Œ÷Ü±ÿÿÿÿÿ8€è¨üÃ.
-U	java:S106"9Replace this use of System.out or System.err by a logger.(²ùĞí8ŠÛŸüÃ.
+U	java:S106:"9Replace this use of System.out or System.err by a logger.(Ì‹¶8¨‘Ú°Ä.
+L
+java:S1481A"*Remove this unused "start" local variable.(é²ïÔüÿÿÿÿ8±¬îÅ.
+U	java:S106"9Replace this use of System.out or System.err by a logger.(²ùĞí8ŠÛŸüÃ.
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÉÇÆÄ8ó˜Ô±Ä.
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(Œ÷Ü±ÿÿÿÿÿ8€è¨üÃ.
+[
+java:S1854A"9Remove this useless assignment to local variable "start".(é²ïÔüÿÿÿÿ8±¬îÅ.
+T	java:S106,"9Replace this use of System.out or System.err by a logger.(®¹—8€ñÑ°Ä.
